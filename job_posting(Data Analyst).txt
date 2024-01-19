@@ -1,0 +1,53 @@
+--select all the data
+select * from job_posting_analysis
+select * from company
+select * from benefits
+
+--top 10 data analyst job posted in Linkin 2023
+select title,count(title) as total_count 
+from job_posting_analysis
+where title like '%DataAnalyst%'
+group by title
+order by total_count desc
+limit 10
+
+--what location has the most indemand data analyst job
+select title,location,count(title) as total_count
+from job_posting_analysis
+where title like '%DataAnalyst'
+group by title,location
+order by total_count desc
+
+--maximum salary of a data analyst (2023)
+select title,location,max_salary,currency
+from job_posting_analysis
+where title like '%DataAnalyst' and max_salary is NOT NULL
+order by max_salary desc
+
+--minimum salary of a data analyst (2023)
+select title,location,min_salary,currency
+from job_posting_analysis
+where title like '%DataAnalyst' and min_salary is NOT NULL
+order by min_salary asc
+
+--what are the usual format of work to employer wants 
+select formatted_work_type,count(formatted_work_type) as total_count
+from job_posting_analysis
+where title like 'DataAnalyst'
+group by formatted_work_type
+order by total_count desc
+
+--what experience leve; do they usually seek
+select formatted_experience_level,count(formatted_experience_level) as total_count
+from job_posting_analysis
+where title like 'DataAnalyst' and formatted_experience_level is NOT NULL
+group by formatted_experience_level 
+order by total_count desc
+
+--data analyst company that seeks employee regarding to this field
+select JA.company_id,JA.title,JA.location,JA.max_salary,C.name,C.address
+from job_posting_analysis JA
+INNER JOIN company C
+ON JA.company_id=C.company_id
+where JA.max_salary is NOT NULL and JA.title like 'DataAnalyst'
+
